@@ -1,0 +1,24 @@
+{
+  "name": "randomtext",
+  "version": "0.0.1",
+  "description": "Random text map generator with bash color codes",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "proc-noise": "^0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wilsontr/randomtext.git"
+  },
+  "author": "Trevor Wilson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wilsontr/randomtext/issues"
+  },
+  "homepage": "https://github.com/wilsontr/randomtext#readme"
+}
