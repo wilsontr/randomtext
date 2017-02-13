@@ -47,6 +47,9 @@ var TextGenerator = (function() {
 	var width = 10;
 	var height = 10;
 
+	var xScaleFactor = Math.random() * 0.2;
+	var yScaleFactor = Math.random() * 0.2;
+
 	function _quantizeToCharIndex(noiseVal) {
 		var setSize = characterSet.length;
 		var floatIndex = noiseVal * setSize;
@@ -55,7 +58,7 @@ var TextGenerator = (function() {
 	}
 
 	function _getNoise(x, y) {
-		return _scaleNoise(Perlin.noise(x, y));
+		return _scaleNoise(Perlin.noise(x * xScaleFactor, y * xScaleFactor));
 	}
 
 	function _scaleNoise(noise) {
@@ -77,8 +80,12 @@ var TextGenerator = (function() {
 		return charIndex;
 	}
 
+	function getCharChance(x, y) {
+		return _scaleNoise(ChancePerlin.noise(x * xScaleFactor, y * xScaleFactor));
+	}
+
 	function _getChar(x, y) {
-		let charChance = _scaleNoise(ChancePerlin.noise(x, y));
+		let charChance = getCharChance(x, y);
 		let char = ' ';
 		if ( charChance > chanceThreshold ) {
 			let charIndex = _getPerlinChar(x, y);

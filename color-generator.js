@@ -51,12 +51,19 @@ var ColorGenerator = (function() {
 	var width = 10;
 	var height = 10;
 
+	var xScaleFactor = 0.1;
+	var yScaleFactor = 0.1;
+
 	var fgMapStart, fgMapScale;
 	var bgMapStart, bgMapEnd;
 
 	_setNoiseScaling();
 
 	function _setNoiseScaling() {
+
+		xScaleFactor = Math.random() * 0.2;
+		yScaleFactor = Math.random() * 0.2;
+
 		var fgNoiseMapping = _getNoiseMapping();
 		var bgNoiseMapping = _getNoiseMapping();
 
@@ -68,8 +75,8 @@ var ColorGenerator = (function() {
 	}
 
 	function _getNoiseMapping() {
-		var mapStart = Math.random() * 0.5;
-		var mapEnd = mapStart + Math.random() * 0.5;
+		var mapStart = Math.random();
+		var mapEnd = mapStart + (Math.random() * 0.5);
 		if ( mapEnd > 1 ) {
 			mapEnd = 1;
 		}
@@ -108,11 +115,11 @@ var ColorGenerator = (function() {
 	}
 
 	function _getBgNoise(x, y) {
-		return _scaleNoise(BgPerlin.noise(x, y));
+		return _scaleNoise(BgPerlin.noise(x * xScaleFactor, y * yScaleFactor));
 	}
 
 	function _getFgNoise(x, y) {
-		return _scaleNoise(FgPerlin.noise(x, y));
+		return _scaleNoise(FgPerlin.noise(x * xScaleFactor, y * yScaleFactor));
 	}
 
 	function _getBgColorIndex(x, y) {
@@ -153,6 +160,7 @@ var ColorGenerator = (function() {
 		setSize: function(w, h) {			
 			width = w;
 			height = h;
+			_setNoiseScaling();
 		},
 
 		getFgColor: function(x, y) {
