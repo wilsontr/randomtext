@@ -80,7 +80,6 @@ var TextGenerator = (function() {
 	function _getChar(x, y) {
 		let charChance = _scaleNoise(ChancePerlin.noise(x, y));
 		let char = ' ';
-		console.log('charChance', charChance);
 		if ( charChance > chanceThreshold ) {
 			let charIndex = _getPerlinChar(x, y);
 			char = characterSet[charIndex];
