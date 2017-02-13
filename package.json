@@ -5,6 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "lodash": "^4.17.4",
+    "noisejs": "^2.1.0",
+    "perlin-simplex": "0.0.2",
     "proc-noise": "^0.0.1"
   },
   "devDependencies": {},

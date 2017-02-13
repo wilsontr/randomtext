@@ -1,14 +1,12 @@
 
-var Simplex = require('perlin-simplex');
-const PerlinGenerator = require('proc-noise');
+const Simplex = require('perlin-simplex');
 const _ = require('lodash');
 
 var TextGenerator = (function() {
-	//var textNoise = new Simplex();
-	var Perlin = new PerlinGenerator();
-	var ChancePerlin = new PerlinGenerator();
+	var Perlin = new Simplex();
+	var ChancePerlin = new Simplex();
 
-	const chanceThreshold = 0.5;
+	const chanceThreshold = 0.3;
 
 	const characterSet = [
 		'\u0000',
@@ -26,7 +24,24 @@ var TextGenerator = (function() {
 		'\u2640',
 		'\u266A',
 		'\u266B',
-		'\u263C'
+		'\u263C',
+
+		'\u25BA',
+		'\u25C4',
+		'\u2195',
+		'\u203C',
+		'\u00B6',
+		'\u00A7',
+		'\u25AC',
+		'\u21A8',
+		'\u2191',
+		'\u2193',
+		'\u2192',
+		'\u2190',
+		'\u221F',
+		'\u2194',
+		'\u25B2',
+		'\u25BC'
 	];
 
 	var width = 10;
@@ -39,18 +54,13 @@ var TextGenerator = (function() {
 		return intVal;
 	}
 
-	function _xDimensionToProportion (x) {
-		//return x / width;
-		return x;
-	}
-
-	function _yDimensionToProportion (y) {
-		return y;
-	}
-
 	function _getNoise(x, y) {
-		return Perlin.noise(x, y);
+		return _scaleNoise(Perlin.noise(x, y));
 	}
+
+	function _scaleNoise(noise) {
+		return (noise / 2) + 0.5;
+	}	
 
 	function _getPerlinChar(x, y) {
 		var noise = _getNoise(x, y);
@@ -68,8 +78,9 @@ var TextGenerator = (function() {
 	}
 
 	function _getChar(x, y) {
-		let charChance = ChancePerlin.noise(x, y);
+		let charChance = _scaleNoise(ChancePerlin.noise(x, y));
 		let char = ' ';
+		console.log('charChance', charChance);
 		if ( charChance > chanceThreshold ) {
 			let charIndex = _getPerlinChar(x, y);
 			char = characterSet[charIndex];
@@ -89,9 +100,7 @@ var TextGenerator = (function() {
 		},
 
 		getChar: function(x, y) {
-			var noiseX = _xDimensionToProportion(x);
-			var noiseY = _yDimensionToProportion(y);
-			var char = _getChar(noiseX, noiseY);
+			var char = _getChar(x, y);
 			return char;
 		}
 	}

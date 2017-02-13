@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const PerlinGenerator = require('proc-noise');
 const TextGenerator = require('./text-generator');
+const ColorGenerator = require('./color-generator');
 
 var width = 20;
 var height = 20;
@@ -9,17 +9,22 @@ var height = 20;
 class TextTile {
 	constructor(params) {
 		this.char = '';
+		this.bgColor = 30;
+		this.fgColor = 39;
+
 		if ( params ) {
 			_.extend(this, params);
 		}
 	}
 
-	setChar(char) {
-		this.char = char;
-	}
-
 	getText() {
-		return this.char;
+		let fgColorCode = "\x1B[" + this.fgColor + 'm';
+		let bgColorCode = "\x1B[" + this.bgColor + 'm';
+		return [
+			fgColorCode,
+			bgColorCode,
+			this.char
+		].join('');
 	}
 
 };
@@ -28,6 +33,7 @@ class TextTile {
 function generate_map(width, height) {
 
 	TextGenerator.setSize(width, height);
+	ColorGenerator.setSize(width, height);
 
 	var map = [];
 
@@ -35,7 +41,9 @@ function generate_map(width, height) {
 		var rowTiles = [];
 		for ( var col = 0; col < width; col++ ) {
 			var new_tile = new TextTile({
-				char: TextGenerator.getChar(col, row)
+				char: TextGenerator.getChar(col, row),
+				bgColor: ColorGenerator.getBgColor(col, row),
+				fgColor: ColorGenerator.getFgColor(col, row)
 			});
 			rowTiles.push(new_tile);
 		}
@@ -55,7 +63,7 @@ function display_map(map) {
 		return rowString.join('');
 	});
 
-	console.log(rows.join('\n'));
+	console.log(rows.join("\x1B[40m\n"));
 
 	
 }
