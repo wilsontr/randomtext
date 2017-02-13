@@ -3,8 +3,8 @@ const TextGenerator = require('./text-generator');
 const ColorGenerator = require('./color-generator');
 const TextTile = require('./text-tile');
 
-var width = 20;
-var height = 20;
+var width = 40;
+var height = 40;
 
 
 function generate_map(width, height) {

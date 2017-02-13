@@ -3,58 +3,104 @@
 var Simplex = require('perlin-simplex');
 const _ = require('lodash');
 
+	const fgColorSet = [
+		'30', // black
+		'31', // red 
+		'32', // green
+		'33', // yellow
+		'34', // blue
+		'35', // magenta
+		'36', // cyan
+		'37', // light gray
+		'90', // dark gray
+		'91', // light red
+		'92', // light green
+		'93', // light yellow
+		'94', // light blue
+		'95', // light magenta 
+		'96', // light cyan
+		'97'  // white
+	];
+
+
+	const bgColorSet = [
+		'40', // black
+		'41', // red 
+		'42', // green
+		'43', // yellow
+		'44', // blue
+		'45', // magenta
+		'46', // cyan
+		'47', // light gray
+		'100', // dark gray
+		'101', // light red
+		'102', // light green
+		'103', // light yellow
+		'104', // light blue
+		'105', // light magenta 
+		'106', // light cyan
+		'107'  // white
+	];
+
+
 var ColorGenerator = (function() {
 	
 	var FgPerlin = new Simplex();
 	var BgPerlin = new Simplex();
 
-	const fgColorSet = [
-		'30',
-		'31',
-		'32',
-		'33',
-		'34',
-		'35',
-		'36',
-		'37',
-		'90',
-		'91',
-		'92',
-		'93',
-		'94',
-		'95',
-		'96',
-		'97'
-	];
-
-
-	const bgColorSet = [
-		'40',
-		'41',
-		'42',
-		'43',
-		'44',
-		'45',
-		'46',
-		'47',
-		'100',
-		'101',
-		'102',
-		'103',
-		'104',
-		'105',
-		'106',
-		'107'
-	];	
-
 	var width = 10;
 	var height = 10;
 
-	function _quantizeToColorIndex(noiseVal, set) {
-		var setSize = set.length;
-		var floatIndex = noiseVal * setSize;
+	var fgMapStart, fgMapScale;
+	var bgMapStart, bgMapEnd;
+
+	_setNoiseScaling();
+
+	function _setNoiseScaling() {
+		var fgNoiseMapping = _getNoiseMapping();
+		var bgNoiseMapping = _getNoiseMapping();
+
+		fgMapStart = fgNoiseMapping.start;
+		fgMapEnd = fgNoiseMapping.end;
+
+		bgMapStart = bgNoiseMapping.start;
+		bgMapEnd = bgNoiseMapping.end;
+	}
+
+	function _getNoiseMapping() {
+		var mapStart = Math.random() * 0.5;
+		var mapEnd = mapStart + Math.random() * 0.5;
+		if ( mapEnd > 1 ) {
+			mapEnd = 1;
+		}
+
+		return {
+			start: mapStart,
+			end: mapEnd
+		};
+	}
+
+
+	function _quantizeToColorIndex(noiseVal, start, end, set) {
+		var mapScale = end - start;
+		var scaledNoise = (noiseVal * mapScale) + start;
+		var floatIndex = scaledNoise * set.length;
 		var intVal = Math.round(floatIndex);
 		return intVal;
+	}
+
+	function _constrain(value, lowerBound, upperBound) {
+		var result;
+
+		if ( value > upperBound ) {
+			result = upperBound;
+		} else if ( value < lowerBound ) {
+			result = lowerBound;
+		} else {
+			result = value;
+		}
+
+		return result;
 	}
 
 	function _scaleNoise(noise) {
@@ -71,13 +117,13 @@ var ColorGenerator = (function() {
 
 	function _getBgColorIndex(x, y) {
 		var noise = _getBgNoise(x, y);
-		var colorIndex = _quantizeToColorIndex(noise, bgColorSet);
+		var colorIndex = _quantizeToColorIndex(noise, bgMapStart, bgMapEnd, bgColorSet);
 		return colorIndex;		
 	}
 
 	function _getFgColorIndex(x, y) {
 		var noise = _getFgNoise(x, y);
-		var colorIndex = _quantizeToColorIndex(noise, fgColorSet);
+		var colorIndex = _quantizeToColorIndex(noise, fgMapStart, fgMapEnd, fgColorSet);
 		return colorIndex;		
 	}
 

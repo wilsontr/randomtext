@@ -6,7 +6,7 @@ var TextGenerator = (function() {
 	var Perlin = new Simplex();
 	var ChancePerlin = new Simplex();
 
-	const chanceThreshold = 0.3;
+	const chanceThreshold = 0.7;
 
 	const characterSet = [
 		'\u0000',
